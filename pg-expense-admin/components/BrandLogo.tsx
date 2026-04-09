@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import Image from 'next/image';
-import logo from '@/app/logo.png';
+import logo from '@/app/icon.png';
 
 export function BrandLogo({
   size = 'md',
