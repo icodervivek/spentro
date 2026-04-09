@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "Spentro",
+    "slug": "pg-expense",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "scheme": "pgexpense",
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Spentro to access your photos to upload bill images."
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "android": {
+      "package": "com.pgexpense.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#6366F1"
+      }
+    },
+    "ios": {
+      "bundleIdentifier": "com.pgexpense.app",
+      "supportsTablet": false
+    },
+    "web": {
+      "bundler": "metro"
+    }
+  }
+}

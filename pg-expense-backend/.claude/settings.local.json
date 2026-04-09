@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(node -c server.js)",
+      "Bash(node -c utils/balanceCalculator.js)",
+      "Bash(node -c controllers/expenseController.js)",
+      "Bash(node -c controllers/authController.js)",
+      "Bash(node -c jobs/recurringExpenseJob.js)",
+      "Bash(node -c models/User.js)",
+      "Bash(node -c models/Group.js)",
+      "Bash(node -c models/Expense.js)",
+      "Bash(node -c models/Settlement.js)",
+      "Bash(node -c models/RecurringExpense.js)",
+      "Bash(mkdir -p pg-expense-app/app)",
+      "Bash(mkdir -p pg-expense-app/app/'\\(auth\\)')",
+      "Bash(mkdir -p pg-expense-app/app/'\\(tabs\\)')",
+      "Bash(mkdir -p pg-expense-app/app/group)",
+      "Bash(mkdir -p pg-expense-app/app/expense)",
+      "Bash(npm list:*)",
+      "Bash(ipconfig)",
+      "Bash(npx next:*)",
+      "Bash(xargs grep:*)",
+      "Bash(node -e \"console.log\\(require\\('./node_modules/next/package.json'\\).version\\)\")",
+      "Bash(npm run:*)"
+    ]
+  }
+}
