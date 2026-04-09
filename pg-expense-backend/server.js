@@ -4,15 +4,13 @@ const helmet = require('helmet');
 const cors = require('cors');
 const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
+const dns = require('node:dns');
 
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/errorHandler');
 const { startRecurringJob } = require('./jobs/recurringExpenseJob');
-const dns = require("node:dns");
 
-dns.setServers(["8.8.8.8", "1.1.1.1"]);
-
-
+dns.setServers(['8.8.8.8', '1.1.1.1']);
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
 const authRoutes = require('./routes/authRoutes');
@@ -44,7 +42,6 @@ const resolvedAllowedOrigins = isDev
 
 const corsOptions = {
   origin: (origin, callback) => {
-    // Allow all in development, or no-origin requests (mobile / Postman)
     if (isDev || !origin || resolvedAllowedOrigins.length === 0 || resolvedAllowedOrigins.includes(origin)) {
       return callback(null, true);
     }
@@ -52,12 +49,11 @@ const corsOptions = {
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-  // Let cors reflect requested headers so browser preflight for mutations stays compatible.
   allowedHeaders: undefined,
   maxAge: 86400,
 };
 
-// Handle OPTIONS preflight before rate limiter so it never gets blocked
+// Handle OPTIONS preflight before rate limiter
 app.options('*', cors(corsOptions));
 app.use(cors(corsOptions));
 
@@ -72,9 +68,9 @@ if (process.env.NODE_ENV !== 'production') {
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Rate limiting on all /api/ routes (skip OPTIONS preflight)
+// Rate limiting
 const apiLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
+  windowMs: 15 * 60 * 1000,
   max: 100,
   standardHeaders: true,
   legacyHeaders: false,
@@ -82,6 +78,17 @@ const apiLimiter = rateLimit({
   skip: (req) => req.method === 'OPTIONS',
 });
 app.use('/api/', apiLimiter);
+
+// ─── DB connection middleware (must be before all routes) ─────────────────────
+// Uses cached connection so warm serverless invocations skip reconnection.
+app.use(async (_req, _res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
 
 // ─── Health check ─────────────────────────────────────────────────────────────
 app.get('/api/v1/health', (_req, res) => {
@@ -109,22 +116,19 @@ app.use(errorHandler);
 // ─── Bootstrap ───────────────────────────────────────────────────────────────
 const PORT = process.env.PORT || 5000;
 
-const start = async () => {
-  await connectDB();
-  // Cron job only runs in a persistent (non-serverless) environment
-  if (!process.env.VERCEL) {
-    startRecurringJob();
-  }
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT} [${process.env.NODE_ENV || 'development'}]`);
-  });
-};
-
-// When imported by Vercel as a serverless function, just connect DB and export
 if (require.main === module) {
-  start();
-} else {
-  connectDB();
+  // Running directly (local dev) — connect once then listen
+  connectDB()
+    .then(() => {
+      if (!process.env.VERCEL) startRecurringJob();
+      app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT} [${process.env.NODE_ENV || 'development'}]`);
+      });
+    })
+    .catch((err) => {
+      console.error('Failed to connect to MongoDB:', err.message);
+      process.exit(1);
+    });
 }
 
 module.exports = app;
