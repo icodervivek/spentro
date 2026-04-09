@@ -219,7 +219,7 @@ export default function UsersPage() {
           onChange={(e) => { setStatus(e.target.value); setPage(1); }}
           className="px-3 py-2 rounded-xl border border-slate-200 text-sm text-slate-700 focus:outline-none focus:ring-2 focus:ring-primary-500"
         >
-          <option value="">All statuses</option>
+          <option value="">All status</option>
           <option value="active">Active</option>
           <option value="suspended">Suspended</option>
         </select>

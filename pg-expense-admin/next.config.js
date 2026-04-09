@@ -1,5 +1,5 @@
 /** @type {import('next').NextConfig} */
-const backendOrigin = process.env.BACKEND_ORIGIN || 'http://localhost:5000';
+const backendOrigin = process.env.BACKEND_ORIGIN
 
 const nextConfig = {
   async rewrites() {

@@ -14,9 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <title>Spentro — Admin</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body
-      cz-shortcut-listen="true"
-      >
+      <body>
         <QueryClientProvider client={queryClient}>
           {children}
         </QueryClientProvider>

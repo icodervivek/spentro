@@ -1,8 +1,9 @@
 'use client';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { LayoutDashboard, Users, Home, ScrollText, LogOut, ChevronRight } from 'lucide-react';
-import { clearAuth, getUser } from '@/lib/auth';
+import { AdminUser, clearAuth, getUser } from '@/lib/auth';
 import clsx from 'clsx';
 import { BrandLogo } from '@/components/BrandLogo';
 
@@ -16,7 +17,11 @@ const NAV = [
 export function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const user = getUser();
+  const [user, setUser] = useState<AdminUser | null>(null);
+
+  useEffect(() => {
+    setUser(getUser());
+  }, []);
 
   const handleLogout = () => {
     clearAuth();
