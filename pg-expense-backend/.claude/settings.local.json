@@ -22,7 +22,8 @@
       "Bash(npx next:*)",
       "Bash(xargs grep:*)",
       "Bash(node -e \"console.log\\(require\\('./node_modules/next/package.json'\\).version\\)\")",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(ls D:/desk26/pg-expense/pg-expense-admin/next.config*)"
     ]
   }
 }
