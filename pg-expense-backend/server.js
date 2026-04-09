@@ -111,10 +111,20 @@ const PORT = process.env.PORT || 5000;
 
 const start = async () => {
   await connectDB();
-  startRecurringJob();
+  // Cron job only runs in a persistent (non-serverless) environment
+  if (!process.env.VERCEL) {
+    startRecurringJob();
+  }
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT} [${process.env.NODE_ENV || 'development'}]`);
   });
 };
 
-start();
+// When imported by Vercel as a serverless function, just connect DB and export
+if (require.main === module) {
+  start();
+} else {
+  connectDB();
+}
+
+module.exports = app;
