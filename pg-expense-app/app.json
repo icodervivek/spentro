@@ -23,7 +23,10 @@
       "package": "com.pgexpense.app",
       "adaptiveIcon": {
         "backgroundColor": "#6366F1"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "ios": {
       "bundleIdentifier": "com.pgexpense.app",
@@ -31,6 +34,14 @@
     },
     "web": {
       "bundler": "metro"
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "86971373-b6d9-4d6b-9612-01f27518cb0a"
+      }
     }
   }
 }
