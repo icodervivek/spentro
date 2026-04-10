@@ -6,6 +6,7 @@ import { Spinner } from '@/components/Spinner';
 import { StatCard } from '@/components/StatCard';
 import { ArrowLeft, Receipt, IndianRupee, Users } from 'lucide-react';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 
 const fmt = (paise: number) =>
   '₹' + (paise / 100).toLocaleString('en-IN', { maximumFractionDigits: 0 });
@@ -17,13 +18,17 @@ const fmtDate = (date?: string | Date) =>
 const categoryLabel = (value?: string) =>
   value ? value.charAt(0).toUpperCase() + value.slice(1) : 'Other';
 
-export default function GroupDetailPage({ params }: { params: { id: string } }) {
+export default function GroupDetailPage() {
+  const params = useParams<{ id: string }>();
+  const groupId = typeof params?.id === 'string' ? params.id : undefined;
+
   const { data, isLoading } = useQuery({
-    queryKey: ['admin-group', params.id],
-    queryFn: () => adminApi.groupDetail(params.id),
+    queryKey: ['admin-group', groupId],
+    queryFn: () => adminApi.groupDetail(groupId!),
+    enabled: !!groupId,
   });
 
-  if (isLoading) return <Spinner />;
+  if (!groupId || isLoading) return <Spinner />;
 
   const { group, stats, transactions, balances } = data ?? {};
   const expenses = transactions?.expenses ?? [];
